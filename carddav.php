@@ -28,6 +28,7 @@ class carddav extends rcube_plugin
 
 	public function checkMigrations(){
 		$dbh = rcmail::get_instance()->db;
+		rcube::console(print_r(rcmail::get_instance()->task,true));
 
 		$db_backend = "unknown";
 
