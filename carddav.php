@@ -35,8 +35,9 @@ class carddav extends rcube_plugin
 			case "mysql":
 				$db_backend = "mysql";
 				break;
+			case "sqlite":
 			case "sqlcipher":
-				$db_backend = "sqlcipher";
+				$db_backend = "sqlite3";
 				break;
 			case "pgsql":
 			case "postgres":
