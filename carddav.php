@@ -147,7 +147,7 @@ class carddav extends rcube_plugin
 
 	// use this address book for autocompletion queries
 	// (maybe this should be configurable by the user?)
-	$config = rcmail::get_instance()->config;
+	/*$config = rcmail::get_instance()->config;
 	$sources = (array) $config->get('autocomplete_addressbooks', array('sql'));
 
 	$dbh = $this->address_book_db();
@@ -162,7 +162,7 @@ class carddav extends rcube_plugin
 			$sources[] = $abookname;
 		}
 	}
-	$config->set('autocomplete_addressbooks', $sources);
+	$config->set('autocomplete_addressbooks', $sources);*/
 	$skin_path = $this->local_skin_path();
 	$this->include_stylesheet($skin_path . '/carddav.css');
 	}}}
