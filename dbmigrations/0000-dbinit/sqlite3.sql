@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS TABLE_PREFIXcarddav_addressbooks (
 	sync_token   VARCHAR(255) NOT NULL DEFAULT '', -- sync-token the server sent us for the last sync
 	authentication_scheme VARCHAR(64) NOT NULL DEFAULT "auto", -- the HTTP authentication scheme to use, auto will be overwritten
 
-	presetname   VARCHAR(64),                  -- presetname
+	presetname   VARCHAR(64)                  -- presetname
 
 	-- not enforced by sqlite < 3.6.19
 	-- disabled by mailden because db users is separate from this db

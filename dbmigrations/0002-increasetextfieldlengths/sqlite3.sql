@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS TABLE_PREFIXcarddav_addressbooks_X (
 
 	presetname   VARCHAR(255),                  -- presetname
 
-	use_categories TINYINT NOT NULL DEFAULT 0,
+	use_categories TINYINT NOT NULL DEFAULT 0
 
 	-- not enforced by sqlite < 3.6.19
 		-- disabled by mailden because db users is separate from this db
