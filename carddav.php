@@ -28,7 +28,7 @@ class carddav extends rcube_plugin
 
 	public function checkMigrations(){
 		$dbh = rcmail::get_instance()->db;
-		rcube::console(print_r(rcmail::get_instance()->task,true));
+		rcube::console("carddav checkMigration");
 
 		$db_backend = "unknown";
 
@@ -164,6 +164,7 @@ class carddav extends rcube_plugin
 
 	public function init_presets()
 	{{{
+		rcube::console("carddav init_presets");
 	$dbh = rcmail::get_instance()->db;
 	$prefs = carddav_common::get_adminsettings();
 
@@ -291,6 +292,7 @@ class carddav extends rcube_plugin
 
 	public function get_address_book($p)
 	{{{
+		rcube::console("carddav getAddressBook");
 	if (preg_match(";^carddav_(\d+)$;", $p['id'], $match)){
 		$p['instance'] = new carddav_backend($match[1]);
 	}
