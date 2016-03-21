@@ -24,7 +24,8 @@ CREATE TABLE IF NOT EXISTS TABLE_PREFIXcarddav_addressbooks (
 	presetname   VARCHAR(64),                  -- presetname
 
 	-- not enforced by sqlite < 3.6.19
-	FOREIGN KEY(user_id) REFERENCES TABLE_PREFIXusers(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+	-- disabled by mailden because db users is separate from this db
+	--FOREIGN KEY(user_id) REFERENCES TABLE_PREFIXusers(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS TABLE_PREFIXcarddav_contacts (
