@@ -35,8 +35,8 @@ class carddav extends rcube_plugin
 			case "mysql":
 				$db_backend = "mysql";
 				break;
-			case "sqlite":
-				$db_backend = "sqlite3";
+			case "sqlcipher":
+				$db_backend = "sqlcipher";
 				break;
 			case "pgsql":
 			case "postgres":
@@ -149,7 +149,7 @@ class carddav extends rcube_plugin
 	$config = rcmail::get_instance()->config;
 	$sources = (array) $config->get('autocomplete_addressbooks', array('sql'));
 
-	$dbh = rcmail::get_instance()->db;
+	$dbh = $this->address_book_db();
 	$sql_result = $dbh->query('SELECT id FROM ' .
 		$dbh->table_name('carddav_addressbooks') .
 		' WHERE user_id=? AND active=1',
@@ -168,8 +168,8 @@ class carddav extends rcube_plugin
 
 	public function init_presets()
 	{{{
-		rcube::console("carddav init_presets");
-	$dbh = rcmail::get_instance()->db;
+		
+	$dbh = $this->address_book_db();
 	$prefs = carddav_common::get_adminsettings();
 
 	// migrate old settings
@@ -270,7 +270,7 @@ class carddav extends rcube_plugin
 
 	public function address_sources($p)
 	{{{
-	$dbh = rcmail::get_instance()->db;
+	$dbh = $this->address_book_db();
 	$prefs = carddav_common::get_adminsettings();
 
 	$sql_result = $dbh->query('SELECT id,name,presetname FROM ' .
@@ -584,7 +584,8 @@ class carddav extends rcube_plugin
 
 	private static function insert_abook($pa)
 	{{{
-	$dbh = rcmail::get_instance()->db;
+		$rc = rcmail::get_instance();
+		$dbh = $rc->config->get('address_book_db');
 
 	// check parameters
 	if(array_key_exists('refresh_time', $pa)) {
@@ -634,7 +635,8 @@ class carddav extends rcube_plugin
 
 	public static function update_abook($abookid, $pa)
 	{{{
-	$dbh = rcmail::get_instance()->db;
+		$rc = rcmail::get_instance();
+		$dbh = $rc->config->get('address_book_db');
 
 	// check parameters
 	if(array_key_exists('refresh_time', $pa))

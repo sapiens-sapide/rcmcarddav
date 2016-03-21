@@ -93,9 +93,14 @@ class carddav_backend extends rcube_addressbook
 	// array with list of potential date fields for formatting
 	private $datefields = array('birthday', 'anniversary');
 
+	public function address_book_db () {
+		$rc = rcmail::get_instance();
+		return $rc->config->get('address_book_db');
+	}
+
 	public function __construct($dbid)
 	{{{
-	$dbh = rcmail::get_instance()->db;
+	$dbh = $this->address_book_db();
 
 	$this->ready    = $dbh && !$dbh->is_error();
 	$this->groups   = true;
@@ -156,7 +161,7 @@ class carddav_backend extends rcube_addressbook
 	 */
 	private function storeextrasubtype($typename, $subtype)
 	{{{
-	$dbh = rcmail::get_instance()->db;
+	$dbh = $this->address_book_db();
 	$sql_result = $dbh->query('INSERT INTO ' .
 		$dbh->table_name('carddav_xsubtypes') .
 		' (typename,subtype,abook_id) VALUES (?,?,?)',
@@ -291,7 +296,7 @@ class carddav_backend extends rcube_addressbook
 
 	private function dbstore_base($table, $etag, $uri, $vcfstr, $save_data, $dbid=0, $xcol=array(), $xval=array())
 	{{{
-	$dbh = rcmail::get_instance()->db;
+	$dbh = $this->address_book_db();
 
 	// get rid of the %u placeholder in the URI, otherwise the refresh operation
 	// will not be able to match local cards with those provided by the server
@@ -411,7 +416,7 @@ class carddav_backend extends rcube_addressbook
 	 */
 	private function refreshdb_from_server()
 	{{{
-	$dbh = rcmail::get_instance()->db;
+	$dbh = $this->address_book_db();
 	$duration = time();
 
 	// determine existing local contact URIs and ETAGs
@@ -608,7 +613,7 @@ EOF
 
 	private function list_records_readdb($cols, $subset=0, $count_only=false)
 	{{{
-	$dbh = rcmail::get_instance()->db;
+	$dbh = $this->address_book_db();
 
 	// true if we can use DB filtering or no filtering is requested
 	$filter = $this->get_search_set();
@@ -680,7 +685,7 @@ EOF
 
 	private function query_addressbook_multiget($hrefs)
 	{{{
-	$dbh = rcmail::get_instance()->db;
+	$dbh = $this->address_book_db();
 	$hrefstr = '';
 	foreach ($hrefs as $href) {
 		$hrefstr .= "<D:href>$href</D:href>\n";
@@ -925,7 +930,7 @@ EOF
 	 */
 	function search($fields, $value, $mode=0, $select=true, $nocount=false, $required=array())
 	{{{
-	$dbh = rcmail::get_instance()->db;
+	$dbh = $this->address_book_db();
 	if (!is_array($fields))
 		$fields = array($fields);
 	if (!is_array($required) && !empty($required))
@@ -1098,7 +1103,7 @@ EOF
 	private function _count($cols=array())
 	{{{
 	if($this->total_cards < 0) {
-		$dbh = rcmail::get_instance()->db;
+		$dbh = $this->address_book_db();
 
 		$sql_result = $dbh->query('SELECT COUNT(id) as total_cards FROM ' .
 			$dbh->table_name('carddav_contacts') .
@@ -1888,7 +1893,7 @@ EOF
 			return false;
 	}
 
-	$dbh = rcmail::get_instance()->db;
+	$dbh = $this->address_book_db();
 	foreach ($ids as $cid) {
 		$dbh->query('INSERT INTO ' .
 			$dbh->table_name('carddav_group_user') .
@@ -1964,7 +1969,7 @@ EOF
 	 */
 	public function get_record_groups($id)
 	{{{
-	$dbh = rcmail::get_instance()->db;
+	$dbh = $this->address_book_db();
 	$sql_result = $dbh->query('SELECT id,name FROM '.
 		$dbh->table_name('carddav_groups') . ',' .
 		$dbh->table_name('carddav_group_user') .
@@ -1986,7 +1991,7 @@ EOF
 	$this->group_id = $gid;
 	$this->total_cards = -1;
 	if ($gid) {
-		$dbh = rcmail::get_instance()->db;
+		$dbh = $this->address_book_db();
 		$this->filter = "EXISTS(SELECT * FROM ".$dbh->table_name("carddav_group_user")."
 			WHERE group_id = '{$gid}' AND contact_id = ".$dbh->table_name("carddav_contacts").".id)";
 	} else {
@@ -2002,7 +2007,7 @@ EOF
 	 */
 	function get_group($group_id)
 	{
-		$dbh = rcmail::get_instance()->db;
+		$dbh = $this->address_book_db();
 
 		$sql_result = $dbh->query('SELECT * FROM '.
 			$dbh->table_name('carddav_groups').
@@ -2023,7 +2028,7 @@ EOF
 	 */
 	public function list_groups($search = null)
 	{{{
-	$dbh = rcmail::get_instance()->db;
+	$dbh = $this->address_book_db();
 
 	$searchextra = $search
 		? " AND " . $dbh->ilike('name',"%$search%")
@@ -2201,7 +2206,8 @@ EOF
 
 	public static function get_dbrecord($id, $cols='*', $table='contacts', $retsingle=true, $idfield='id', $other_conditions = array())
 	{{{
-	$dbh = rcmail::get_instance()->db;
+		$rc = rcmail::get_instance();
+		$dbh = $rc->config->get('address_book_db');
 
 	$idfield = $dbh->quoteIdentifier($idfield);
 	$id = $dbh->quote($id);
@@ -2227,7 +2233,8 @@ EOF
 
 	public static function delete_dbrecord($ids, $table='contacts', $idfield='id', $other_conditions = array())
 	{{{
-	$dbh = rcmail::get_instance()->db;
+		$rc = rcmail::get_instance();
+		$dbh = $rc->config->get('address_book_db');
 
 	if(is_array($ids)) {
 		if(count($ids) <= 0) return 0;
@@ -2252,12 +2259,13 @@ EOF
 
 	public static function carddavconfig($abookid)
 	{{{
-	$dbh = rcmail::get_instance()->db;
+		$rc = rcmail::get_instance();
+		$dbh = $rc->config->get('address_book_db');
 
 	// cludge, agreed, but the MDB abstraction seems to have no way of
 	// doing time calculations...
 	$timequery = '('. $dbh->now() . ' > ';
-	if ($dbh->db_provider === 'sqlite') {
+	if ($dbh->db_provider === 'sqlcipher') {
 		$timequery .= ' datetime(last_updated,refresh_time))';
 	} else {
 		$timequery .= ' last_updated+refresh_time)';
@@ -2282,7 +2290,8 @@ EOF
 
 	public static function update_addressbook($dbid=0, $xcol=array(), $xval=array())
 	{{{
-	$dbh = rcmail::get_instance()->db;
+		$rc = rcmail::get_instance();
+		$dbh = $rc->config->get('address_book_db');
 
 	self::$helper->debug("UPDATE addressbook $dbid");
 	$xval[]=$dbid;
@@ -2367,7 +2376,7 @@ EOF
 
   public function delete_all($with_groups = false)
 	{{{
-		$dbh = rcmail::get_instance()->db;
+		$dbh = $this->address_book_db();
 		$abook_id = $this->id;
 		$res1 = $dbh->query('SELECT id FROM '.
 			$dbh->table_name('carddav_contacts').
