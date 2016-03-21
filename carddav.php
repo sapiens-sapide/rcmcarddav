@@ -27,9 +27,9 @@ class carddav extends rcube_plugin
 	public $task = 'addressbook|login|mail|settings|dummy';
 
 	public function checkMigrations(){
-		$dbh = rcmail::get_instance()->db;
-		rcube::console("carddav checkMigration");
-
+		$rc = rcmail::get_instnace();
+		rcube::console("adrress book db in check migration : " . print_r($rc->config->get('address_book_db'), true));
+		$dbh = $rc->db;
 		$db_backend = "unknown";
 
 		switch ($dbh->db_provider){
