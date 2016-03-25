@@ -109,6 +109,7 @@ class carddav extends rcube_plugin
 
 	public function address_book_db () {
 		$rc = rcmail::get_instance();
+		rcube::console($rc->config->get('address_book_db'));
 		return $rc->config->get('address_book_db');
 	}
 
