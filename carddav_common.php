@@ -26,8 +26,8 @@ if (file_exists(__DIR__ . '/vendor/autoload.php'))
 
 class carddav_common
 {
-	const DEBUG      = false; // set to true for basic debugging
-	const DEBUG_HTTP = false; // set to true for debugging raw http stream
+	const DEBUG      = true; // set to true for basic debugging
+	const DEBUG_HTTP = true; // set to true for debugging raw http stream
 
 	const NSDAV     = 'DAV:';
 	const NSCARDDAV = 'urn:ietf:params:xml:ns:carddav';
