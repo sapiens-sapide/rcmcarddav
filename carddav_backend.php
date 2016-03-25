@@ -95,7 +95,7 @@ class carddav_backend extends rcube_addressbook
 
 	public function address_book_db () {
 		$rc = rcmail::get_instance();
-		return $rc->config->get('address_book_db');
+		return $rc->db;
 	}
 
 	public function __construct($dbid)
@@ -2207,7 +2207,7 @@ EOF
 	public static function get_dbrecord($id, $cols='*', $table='contacts', $retsingle=true, $idfield='id', $other_conditions = array())
 	{{{
 		$rc = rcmail::get_instance();
-		$dbh = $rc->config->get('address_book_db');
+		$dbh = $rc->db;
 
 	$idfield = $dbh->quoteIdentifier($idfield);
 	$id = $dbh->quote($id);
@@ -2234,7 +2234,7 @@ EOF
 	public static function delete_dbrecord($ids, $table='contacts', $idfield='id', $other_conditions = array())
 	{{{
 		$rc = rcmail::get_instance();
-		$dbh = $rc->config->get('address_book_db');
+		$dbh = $rc->db;
 
 	if(is_array($ids)) {
 		if(count($ids) <= 0) return 0;
@@ -2260,12 +2260,12 @@ EOF
 	public static function carddavconfig($abookid)
 	{{{
 		$rc = rcmail::get_instance();
-		$dbh = $rc->config->get('address_book_db');
+		$dbh = $rc->db;
 
 	// cludge, agreed, but the MDB abstraction seems to have no way of
 	// doing time calculations...
 	$timequery = '('. $dbh->now() . ' > ';
-	if ($dbh->db_provider === 'sqlcipher') {
+	if ($dbh->db_provider === 'sqlcipher' | $dbh->db_provider === 'sqlite') {
 		$timequery .= ' datetime(last_updated,refresh_time))';
 	} else {
 		$timequery .= ' last_updated+refresh_time)';
@@ -2291,7 +2291,7 @@ EOF
 	public static function update_addressbook($dbid=0, $xcol=array(), $xval=array())
 	{{{
 		$rc = rcmail::get_instance();
-		$dbh = $rc->config->get('address_book_db');
+		$dbh = $rc->db;
 
 	self::$helper->debug("UPDATE addressbook $dbid");
 	$xval[]=$dbid;

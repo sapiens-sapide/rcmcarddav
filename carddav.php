@@ -586,7 +586,7 @@ class carddav extends rcube_plugin
 	private static function insert_abook($pa)
 	{{{
 		$rc = rcmail::get_instance();
-		$dbh = $rc->config->get('address_book_db');
+		$dbh = $rc->db;
 
 	// check parameters
 	if(array_key_exists('refresh_time', $pa)) {
@@ -637,7 +637,7 @@ class carddav extends rcube_plugin
 	public static function update_abook($abookid, $pa)
 	{{{
 		$rc = rcmail::get_instance();
-		$dbh = $rc->config->get('address_book_db');
+		$dbh = $rc->db;
 
 	// check parameters
 	if(array_key_exists('refresh_time', $pa))
