@@ -1316,8 +1316,6 @@ EOF
 	// process all simple attributes
 	foreach ($this->vcf2rc['simple'] as $vkey => $rckey){
 		if (array_key_exists($rckey, $save_data)) {
-			rcube::console("rckey : " . $rckey);
-			rcube::console("save_data : " . print_r($save_data,true));
 			if (strlen($save_data[$rckey]) > 0) {
 				$vcf->{$vkey} = $save_data[$rckey];
 			} else { // delete the field

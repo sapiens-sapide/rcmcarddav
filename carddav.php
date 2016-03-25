@@ -297,7 +297,6 @@ class carddav extends rcube_plugin
 
 	public function get_address_book($p)
 	{{{
-		rcube::console("carddav getAddressBook");
 	if (preg_match(";^carddav_(\d+)$;", $p['id'], $match)){
 		$p['instance'] = new carddav_backend($match[1]);
 	}
